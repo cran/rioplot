@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>decompose.model</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">decompose.model</h1>
+
+
+
+<p>As described in detail in Schoon, Melamed, and Breiger (2024),
+regression inside out entails understanding cases’ contributions to the
+regression model space. Decomposing regression coefficients by cases or
+subsets and model visualization techniques are the key tools of
+regression inside out. decompose.model takes a regression model object
+and a numeric grouping vector for the cases, and returns the
+contributions to the regression coefficients and model variances by the
+grouping vector. Currently supported models include OLS, logistic
+regression, Poisson regression, and negative binomial regression. An
+example of each is provided below.</p>
+<p>OLS regression:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rioplot)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">data</span>(Kenworthy99)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">scale</span>(dv) <span class="sc">~</span> <span class="fu">scale</span>(gdp) <span class="sc">+</span> <span class="fu">scale</span>(pov) <span class="sc">+</span> <span class="fu">scale</span>(tran) <span class="sc">-</span><span class="dv">1</span>,<span class="at">data=</span>Kenworthy99)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">decompose.model</span>(m1,<span class="at">group.by =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>),<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">5</span>),<span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">5</span>)),<span class="at">include.int =</span> <span class="st">&quot;no&quot;</span>)</span></code></pre></div>
+<pre><code>## $decomp.coef
+##                       1          2           3 Model Coefs
+## scale(gdp)   0.09043127 -0.3442457  0.07137623  -0.1824382
+## scale(pov)   0.08898153  0.4106594  0.28299251   0.7826334
+## scale(tran) -0.01805233 -0.3473903 -0.07841964  -0.4438622
+## 
+## $decomp.var
+##                       1          2           3 Model Variances
+## scale(gdp)  0.007805959 0.01254747 0.003479965      0.02383339
+## scale(pov)  0.007215453 0.01159828 0.003216712      0.02203044
+## scale(tran) 0.006942633 0.01115974 0.003095086      0.02119746</code></pre>
+<p>Logistic regression:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;Hilbe&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>Hilbe <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Hilbe,<span class="at">binAffairs=</span><span class="fu">ifelse</span>(Hilbe<span class="sc">$</span>naffairs<span class="sc">&gt;</span><span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)) </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>m2<span class="ot">&lt;-</span><span class="fu">glm</span>(binAffairs <span class="sc">~</span> avgmarr <span class="sc">+</span> hapavg <span class="sc">+</span> vryhap <span class="sc">+</span> smerel <span class="sc">+</span> vryrel <span class="sc">+</span> yrsmarr4 <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>          yrsmarr5 <span class="sc">+</span> yrsmarr6,<span class="at">data=</span>Hilbe, <span class="at">family=</span><span class="fu">binomial</span>())</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">decompose.model</span>(m2,<span class="at">group.by =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">201</span>),<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">200</span>),<span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">200</span>)),</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                <span class="at">model.type =</span> <span class="st">&quot;logit&quot;</span>)</span></code></pre></div>
+<pre><code>## $decomp.coef
+##                     1          2           3 Model Coefs
+## Intercept  0.05971787 -0.1273528 -0.10348046  -0.1711154
+## avgmarr   -0.24968851 -0.3694616 -0.16264481  -0.7817949
+## hapavg    -0.38716522 -0.3343743 -0.31712921  -1.0386688
+## vryhap    -0.49279971 -0.5384404 -0.51360407  -1.5448441
+## smerel    -0.09356562 -0.4037141 -0.32915986  -0.8264395
+## vryrel    -0.33019003 -0.1025715 -0.33405582  -0.7668174
+## yrsmarr4   0.16396384  0.3400305 -0.08552834   0.4184660
+## yrsmarr5   0.04293827  0.4087135  0.26864221   0.7202940
+## yrsmarr6   0.06312812  0.1722334  0.37648895   0.6118505
+## 
+## $decomp.var
+##                    1          2          3 Model Variances
+## Intercept 0.03630495 0.02235802 0.02469380      0.08335666
+## avgmarr   0.04672728 0.02877650 0.03178283      0.10728653
+## hapavg    0.03553109 0.02188145 0.02416744      0.08157993
+## vryhap    0.04038689 0.02487184 0.02747024      0.09272876
+## smerel    0.02470405 0.01521373 0.01680313      0.05672073
+## vryrel    0.05277061 0.03249822 0.03589336      0.12116191
+## yrsmarr4  0.04469174 0.02752293 0.03039830      0.10261274
+## yrsmarr5  0.04644890 0.02860507 0.03159349      0.10664724
+## yrsmarr6  0.02737290 0.01685731 0.01861842      0.06284849</code></pre>
+<p>Poisson regression:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>m3<span class="ot">&lt;-</span><span class="fu">glm</span>(naffairs<span class="sc">~</span>avgmarr <span class="sc">+</span> hapavg <span class="sc">+</span> vryhap <span class="sc">+</span> smerel <span class="sc">+</span> vryrel <span class="sc">+</span> yrsmarr4 <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>          yrsmarr5 <span class="sc">+</span> yrsmarr6,<span class="at">data=</span>Hilbe,<span class="at">family=</span><span class="fu">poisson</span>(<span class="at">link=</span><span class="st">&quot;log&quot;</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">decompose.model</span>(m3,<span class="at">group.by =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">201</span>),<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">200</span>),<span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">200</span>)),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                <span class="at">model.type=</span><span class="st">&quot;poisson&quot;</span>)</span></code></pre></div>
+<pre><code>## $decomp.coef
+##                     1          2          3 Model Coefs
+## Intercept  0.36961499  0.3344646  0.1896101   0.8936896
+## avgmarr   -0.29605739 -0.2439847 -0.3046603  -0.8447024
+## hapavg    -0.25561998 -0.4450145 -0.2758378  -0.9764722
+## vryhap    -0.51444273 -0.5858584 -0.2268714  -1.3271725
+## smerel    -0.03922081 -0.3953424 -0.4299400  -0.8645032
+## vryrel    -0.13793948 -0.3946393 -0.3580721  -0.8906509
+## yrsmarr4   0.02940394  0.3116065  0.2160086   0.5570191
+## yrsmarr5   0.30313205  0.4027702  0.2315718   0.9374741
+## yrsmarr6   0.09839040  0.3084983  0.5403358   0.9472245
+## 
+## $decomp.var
+##                     1           2           3 Model Variances
+## Intercept 0.003187445 0.001623947 0.004293614     0.009105005
+## avgmarr   0.003821151 0.001946809 0.005147240     0.010915199
+## hapavg    0.002540005 0.001294088 0.003421487     0.007255580
+## vryhap    0.003546249 0.001806751 0.004776937     0.010129937
+## smerel    0.002773807 0.001413206 0.003736427     0.007923439
+## vryrel    0.006389824 0.003255502 0.008607344     0.018252669
+## yrsmarr4  0.004858560 0.002475350 0.006544671     0.013878581
+## yrsmarr5  0.004682337 0.002385568 0.006307292     0.013375197
+## yrsmarr6  0.003082791 0.001570627 0.004152640     0.008806058</code></pre>
+<p>Negative binomial regression:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>m4<span class="ot">&lt;-</span><span class="fu">glm.nb</span>(naffairs<span class="sc">~</span>avgmarr <span class="sc">+</span> hapavg <span class="sc">+</span> vryhap <span class="sc">+</span> smerel <span class="sc">+</span> vryrel <span class="sc">+</span> yrsmarr4 <span class="sc">+</span> </span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>             yrsmarr5 <span class="sc">+</span> yrsmarr6,<span class="at">data=</span>Hilbe)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">decompose.model</span>(m4,<span class="at">group.by =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">201</span>),<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">200</span>),<span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">200</span>)),<span class="at">model.type=</span><span class="st">&quot;nb&quot;</span>)</span></code></pre></div>
+<pre><code>## $decomp.coef
+##                    1          2          3 Model Coefs
+## Intercept  0.4080631  0.3140500  0.1863346   0.9084476
+## avgmarr   -0.3472504 -0.3204935 -0.3209343  -0.9886782
+## hapavg    -0.3044775 -0.4181657 -0.2766478  -0.9992911
+## vryhap    -0.5437135 -0.6060801 -0.2307394  -1.3805330
+## smerel    -0.2252334 -0.4726392 -0.4903277  -1.1882004
+## vryrel    -0.4713079 -0.3008507 -0.5009572  -1.2731158
+## yrsmarr4   0.1433029  0.4351759  0.4599113   1.0383903
+## yrsmarr5   0.2768647  0.3583896  0.2660988   0.9013532
+## yrsmarr6   0.2551637  0.3540654  0.5454519   1.1546810
+## 
+## $decomp.var
+##                    1          2          3 Model Variances
+## Intercept 0.04960029 0.02359640 0.05814853      0.13134523
+## avgmarr   0.06706241 0.03190368 0.07862011      0.17758620
+## hapavg    0.05016872 0.02386682 0.05881492      0.13285046
+## vryhap    0.05169347 0.02459219 0.06060244      0.13688811
+## smerel    0.02777333 0.01321264 0.03255985      0.07354583
+## vryrel    0.06021224 0.02864484 0.07058936      0.15944643
+## yrsmarr4  0.05223215 0.02484846 0.06123396      0.13831458
+## yrsmarr5  0.05813023 0.02765436 0.06814853      0.15393312
+## yrsmarr6  0.03252648 0.01547386 0.03813217      0.08613251</code></pre>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
